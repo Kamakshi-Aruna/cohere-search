@@ -1,103 +1,371 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect } from 'react';
+import QuestionsSidebar from "@/app/components/QuestionsSidebarProps";
+import Header from "@/app/components/Header";
+import AnswersArea from "@/app/components/AnswersArea";
+import SearchBar from "@/app/components/SearchBar";
+
+interface Message {
+    id: string;
+    question: string;
+    answer: string;
+    timestamp: Date;
+}
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    const [query, setQuery] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+    const [uploadLoading, setUploadLoading] = useState(false);
+    const [deletingFile, setDeletingFile] = useState<string | null>(null);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+    const [editingText, setEditingText] = useState('');
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    // Load uploaded files on component mount
+    const loadUploadedFiles = async () => {
+        try {
+            const response = await fetch('/api/list-files');
+            const data = await response.json();
+
+            if (data.success) {
+                setUploadedFiles(data.files);
+            }
+        } catch (err) {
+            // Silently fail - it's okay if we can't load files
+            console.error('Failed to load uploaded files:', err);
+        }
+    };
+
+    // Load files when component mounts
+    useEffect(() => {
+        loadUploadedFiles();
+    }, []);
+
+    const handleSearch = async () => {
+        if (!query.trim()) return;
+
+        const newMessageId = Date.now().toString();
+        const userQuestion = query.trim();
+
+        console.log('🔍 [Frontend] Starting search for:', userQuestion);
+        console.log('🆔 [Frontend] Message ID:', newMessageId);
+
+        // Add user message immediately
+        setMessages(prev => [...prev, {
+            id: newMessageId,
+            question: userQuestion,
+            answer: '',
+            timestamp: new Date()
+        }]);
+
+        setLoading(true);
+        setError('');
+        setQuery(''); // Clear input immediately
+
+        const requestBody = {
+            query: userQuestion,
+            useEnhancedSearch: true,
+            rerankingEnabled: true
+        };
+
+        console.log('📤 [Frontend] Sending request to /api/enhanced-search with body:', requestBody);
+        console.time('🕐 [Frontend] Search request duration');
+
+        try {
+            const response = await fetch('/api/enhanced-search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            });
+
+            console.timeEnd('🕐 [Frontend] Search request duration');
+            console.log('📥 [Frontend] Response received:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok
+            });
+
+            if (!response.ok) {
+                console.error('❌ [Frontend] HTTP error:', {
+                    status: response.status,
+                    statusText: response.statusText
+                });
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('📊 [Frontend] Response data:', {
+                success: data.success,
+                hasAnswer: !!data.answer,
+                answerLength: data.answer?.length || 0,
+                sourcesCount: data.sources?.length || 0,
+                searchMethod: data.searchMethod,
+                rerankingApplied: data.rerankingApplied,
+                hasError: !!data.error
+            });
+
+            if (data.success) {
+                console.log('✅ [Frontend] Search successful, updating message with answer');
+                // Update the message with the answer
+                setMessages(prev => prev.map(msg =>
+                    msg.id === newMessageId
+                        ? { ...msg, answer: data.answer }
+                        : msg
+                ));
+            } else {
+                console.error('❌ [Frontend] Search failed:', data.error);
+                setError(data.error || 'Search failed');
+                // Remove the message if there was an error
+                setMessages(prev => prev.filter(msg => msg.id !== newMessageId));
+            }
+        } catch (err) {
+            console.error('❌ [Frontend] Network error during search:', err);
+            setError('Failed to connect to search service');
+            // Remove the message if there was an error
+            setMessages(prev => prev.filter(msg => msg.id !== newMessageId));
+        } finally {
+            setLoading(false);
+            console.log('🏁 [Frontend] Search process completed');
+        }
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !loading) {
+            handleSearch();
+        }
+    };
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || file.type !== 'application/pdf') {
+            setError('Please select a PDF file');
+            return;
+        }
+
+        setUploadLoading(true);
+        setError('');
+
+        try {
+            const formData = new FormData();
+            formData.append('pdf', file);
+
+            const response = await fetch('/api/upload-pdf', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setUploadedFiles(prev => [...prev, file.name]);
+                setError('');
+                setShowUploadModal(false); // Close modal after successful upload
+                // Reset file input
+                e.target.value = '';
+            } else {
+                setError(data.error || 'Upload failed');
+            }
+        } catch (err) {
+            setError('Failed to upload PDF');
+        } finally {
+            setUploadLoading(false);
+        }
+    };
+
+    const handleDeleteFile = async (filename: string) => {
+        if (!confirm(`Are you sure you want to delete ${filename}?`)) {
+            return;
+        }
+
+        setDeletingFile(filename);
+        setError('');
+
+        try {
+            const response = await fetch('/api/delete-pdf', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ filename }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setUploadedFiles(prev => prev.filter(f => f !== filename));
+                alert(`Successfully deleted ${filename}`);
+            } else {
+                alert(`Error: ${data.error || 'Failed to delete file'}`);
+            }
+        } catch (err) {
+            alert('Error: Failed to delete file');
+        } finally {
+            setDeletingFile(null);
+        }
+    };
+
+    const handleEditQuestion = (messageId: string, currentQuestion: string) => {
+        setEditingMessageId(messageId);
+        setEditingText(currentQuestion);
+    };
+
+    const handleSaveEdit = async (messageId: string) => {
+        if (!editingText.trim()) return;
+
+        const editedQuestion = editingText.trim();
+
+        // Update the question in the message
+        setMessages(prev => prev.map(msg =>
+            msg.id === messageId
+                ? { ...msg, question: editedQuestion, answer: '', timestamp: new Date() }
+                : msg
+        ));
+
+        // Clear edit state
+        setEditingMessageId(null);
+        setEditingText('');
+
+        // Re-search with the edited question
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await fetch('/api/enhanced-search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    query: editedQuestion,
+                    useEnhancedSearch: true,
+                    rerankingEnabled: true
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Update the message with the new answer
+                setMessages(prev => prev.map(msg =>
+                    msg.id === messageId
+                        ? { ...msg, answer: data.answer }
+                        : msg
+                ));
+            } else {
+                setError(data.error || 'Search failed');
+            }
+        } catch (err) {
+            setError('Failed to connect to search service');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingMessageId(null);
+        setEditingText('');
+    };
+
+    return (
+        <div className="flex h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+            {/* Questions Sidebar - Full Height */}
+            <QuestionsSidebar
+                messages={messages}
+                editingMessageId={editingMessageId}
+                editingText={editingText}
+                setEditingText={setEditingText}
+                onEditQuestion={handleEditQuestion}
+                onSaveEdit={handleSaveEdit}
+                onCancelEdit={handleCancelEdit}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+                {messages.length > 0 ? (
+                    <>
+                        <Header />
+                        <AnswersArea
+                            messages={messages}
+                            editingMessageId={editingMessageId}
+                            editingText={editingText}
+                            setEditingText={setEditingText}
+                            onEditQuestion={handleEditQuestion}
+                            onSaveEdit={handleSaveEdit}
+                            onCancelEdit={handleCancelEdit}
+                        />
+
+                        {/* Error Message */}
+                        {error && (
+                            <div className="flex-shrink-0 px-4 pb-2">
+                                <div className="max-w-4xl mx-auto">
+                                    <div className="bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded-lg">
+                                        <p className="font-semibold">Error:</p>
+                                        <p>{error}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        <SearchBar
+                            query={query}
+                            setQuery={setQuery}
+                            loading={loading}
+                            handleSearch={handleSearch}
+                            handleKeyPress={handleKeyPress}
+                            showUploadModal={showUploadModal}
+                            setShowUploadModal={setShowUploadModal}
+                            uploadLoading={uploadLoading}
+                            uploadedFiles={uploadedFiles}
+                            deletingFile={deletingFile}
+                            handleFileUpload={handleFileUpload}
+                            handleDeleteFile={handleDeleteFile}
+                            messages={messages}
+                        />
+                    </>
+                ) : (
+                    /* Centered Layout for No Messages */
+                    <>
+                        <Header />
+
+                        {/* Centered Search Area */}
+                        <div className="flex-1 flex items-center justify-center px-8">
+                            {/* Error Message for Empty State */}
+                            {error && (
+                                <div className="absolute top-32 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
+                                    <div className="bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded-lg">
+                                        <p className="font-semibold">Error:</p>
+                                        <p>{error}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="w-full max-w-4xl">
+                                <SearchBar
+                                    query={query}
+                                    setQuery={setQuery}
+                                    loading={loading}
+                                    handleSearch={handleSearch}
+                                    handleKeyPress={handleKeyPress}
+                                    showUploadModal={showUploadModal}
+                                    setShowUploadModal={setShowUploadModal}
+                                    uploadLoading={uploadLoading}
+                                    uploadedFiles={uploadedFiles}
+                                    deletingFile={deletingFile}
+                                    handleFileUpload={handleFileUpload}
+                                    handleDeleteFile={handleDeleteFile}
+                                    messages={messages}
+                                />
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
