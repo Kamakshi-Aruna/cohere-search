@@ -1,0 +1,147 @@
+{
+  "documents": {
+    "Aruna_profile.pdf": [
+      {
+        "id": "1000",
+        "text": "NAME : KAMAKSHI ARUNA \n \nCONTACT NUMBER : +91 9391301232 \n \nEMAIL :arunakamakshi09@gmail. com \n \nADDRESS :Ramireddy Kandiga,Chittoor, \nAndhra Pradesh-517125 \n \n \nCAREER OBJECTIVE: \n \nLooking forward to work with an organization which provides me an opportunity \nto explore my technical skills towards organizational goals. TECHNICAL SKILLS: \nJAVA \n● Knowledge on Class & Object. ● Good knowledge in Constructor and Methods",
+        "source": "Aruna_profile.pdf",
+        "type": "pdf",
+        "chunk_index": 0,
+        "total_chunks": 5
+      },
+      {
+        "id": "1001",
+        "text": "● Knowledge of object-oriented programming principles like \nInheritance,Polymorphism,Abstraction & Encapsulation. ● Good Knowledge in Collection. J2EE \n \n● Familiar with Maven,JDBC,Servlet-API,Tomcat. ● Spring Framework: Spring IOC,Spring MVC,Spring Boot. ● Understanding the WebLogic server. DatabaseManagement \n \n        SQL: \n● Knowledge on DQL,DDL,DML,DTL,DCL commands. ● Good view of RDBMS concepts like DataTypes,Constraints. ● Knowledge on SQL Joins(Inner join,Outer Join,Self-join)",
+        "source": "Aruna_profile.pdf",
+        "type": "pdf",
+        "chunk_index": 1,
+        "total_chunks": 5
+      },
+      {
+        "id": "1002",
+        "text": "NOSQL: \n● Knowledge on MongoDB. FrontendSkills \n \n● Good Knowledge in HTML5,CSS3 & JavaScript. ● Knowledge of JSP. KEY SKILLS \n● Attention to details \n● Problem solving skills \n \n● Able to work in team \n \nHOBBIES \n \n● Gardening \n● Listening music \n\nACADEMIC QUALIFICATION: \n     \n \n      \n \nDegree / Board/University School/college Year of  Percentage \n \nCertific    Passing  / CGPA \n \nate \n       \n \nBSC  Sri Venkateswara Vignana Sudha Degree 2023   \n \n  University Tirupathi. College",
+        "source": "Aruna_profile.pdf",
+        "type": "pdf",
+        "chunk_index": 2,
+        "total_chunks": 5
+      },
+      {
+        "id": "1003",
+        "text": "88% \n \n        \n \n12th \n   Vignana Suma Junior   \n92% \n \n  \nBoard of Intermediate. College. 2020 \n \n \n    \n \n        \n \nth \n \nBoard of Secondary \nZ. P. High School \n   \n \n10 \n \nEnglish Medium 2018 \n \n98% \n \n  \nEducation. Thugundram. PERSONAL DETAILS:      \n \n● Date of Birth : 09/07/2003     \n \n● Father’s Name : K. Subramanyam    \n \n● Nationality : Indian     \n \n● Languages Known : English, Telugu",
+        "source": "Aruna_profile.pdf",
+        "type": "pdf",
+        "chunk_index": 3,
+        "total_chunks": 5
+      },
+      {
+        "id": "1004",
+        "text": "● Marital Status : Un-Married     \n \n● Permanent Address : Ramireddy Kandiga,Chittoor,Andhra Pradesh-517125  \n \n \nDECLARATION: \n \nI, hereby declare that the information given above is true to the best of my knowledge. Kamakshi Aruna",
+        "source": "Aruna_profile.pdf",
+        "type": "pdf",
+        "chunk_index": 4,
+        "total_chunks": 5
+      }
+    ],
+    "Mohamed Thoufeek.pdf": [
+      {
+        "id": "1005",
+        "text": "Mohamed Thoufeek M \nFULL STACK DEVELOPER \nthoufeek586@gmail. com | 9500969235 | Ukkadam,  Coimbatore-641001 \n \nSUMMARY \n \nDedicated MERN Stack Developer with strong skills in MongoDB, Express. js, React, and Node. js. Experienced in building responsive, full-stack web applications with clean UI and efficient backend \nlogic. Passionate  about problem-solving,  debugging,  and  writing  maintainable  code. Enthusiastic \nabout  learning  and  keeping  up  with technologies in  web  development",
+        "source": "Mohamed Thoufeek.pdf",
+        "type": "pdf",
+        "chunk_index": 0,
+        "total_chunks": 6
+      },
+      {
+        "id": "1006",
+        "text": "Ready  to  bring technical \nexpertise and innovation to a collaborative work environment. SKILLS \n   \nReact Js Node Js Javascript TailwindCSS Git \nExpress Js MongoDB Firebase Bootstrap GitHub \nSOFT SKILLS \n   \nProblem solving Team Collaboration \n \n \nAdaptability \n   WORK EXPERIENCE \n \nPath Finder (P) Ltd \nProcess Associate \nApril 2022 - Feb 2025 \n Developed and maintained web-based applications, optimizing business processes and enhancing \noperational efficiency",
+        "source": "Mohamed Thoufeek.pdf",
+        "type": "pdf",
+        "chunk_index": 1,
+        "total_chunks": 6
+      },
+      {
+        "id": "1007",
+        "text": "Prepared financial reports and automated tax return processes, improving efficiency. Collaborated with cross-functional teams to troubleshoot and resolve complex technical and financial \nchallenges, ensuring seamless operations. Acidus (P) Ltd \nProcess Associate \nMay 2021 - Feb 2022 \n Reduced claim processing to Automated the follow-up process for outstanding medical claims through \nthe development of custom scripts, significantly improving workflow efficiency",
+        "source": "Mohamed Thoufeek.pdf",
+        "type": "pdf",
+        "chunk_index": 2,
+        "total_chunks": 6
+      },
+      {
+        "id": "1008",
+        "text": "Maintained and managed client databases with a focus on data accuracy and integrity. Improved claim recovery rates through process optimization and effective use of technology. Certification \n \n Completed Full Stack Web Development course at Zenecks Info Tech \n \nPROJECTS \nPortfolio Website  \nDesigned and developed a responsive,user-friendly portfolio website to showcase projects and \nskills. Implemented smooth navigation, clean layout, and interactive elements using HTML,CSS and JavaScript",
+        "source": "Mohamed Thoufeek.pdf",
+        "type": "pdf",
+        "chunk_index": 3,
+        "total_chunks": 6
+      },
+      {
+        "id": "1009",
+        "text": "Ensured cross-browser compatibility and mobile responsiveness for a consistent user experience. Deployed the project online to demonstrate front-end development proficiency. Forever E-commerce Website \n \nCreated an e-commerce platform with features like product listing, cart management, and \npayment integration. Integrated third-party APIs for payment processing, ensuring a seamless user experience. Utilized technologies such as HTML,CSS, JavaScript, and Frameworks like react",
+        "source": "Mohamed Thoufeek.pdf",
+        "type": "pdf",
+        "chunk_index": 4,
+        "total_chunks": 6
+      },
+      {
+        "id": "1010",
+        "text": "Implemented back-end functionalities using node and express Js. EDUCATION \n \n \nBachelor of Commerce in computer Application. Karpagam Academy of Higher Education | 2017 – 2020 | CGPA: 7. 82 \n \nDECLARATION \n \n    \nI hereby affirm that the information presented above is accurate and truthful to the best of my \nknowledge and belief",
+        "source": "Mohamed Thoufeek.pdf",
+        "type": "pdf",
+        "chunk_index": 5,
+        "total_chunks": 6
+      }
+    ],
+    "Umesh_resume_15_3___1_.pdf": [
+      {
+        "id": "1011",
+        "text": "DUmesh\n7794969021#umeshdayananda13@gmail. com\nïlinkedin. com/in/UmeshDayananda§github. com/UmeshDayananda\nObjective\nA motivated full-stack developer seeking a role to leverage expertise in React. js, Tailwind CSS, and modern web\ntools to build scalable, user-centric applications. Committed to delivering impactful solutions through continuous\nlearning. Education\nSreenivasaInstituteofTechnologyandManagementStudiesJune 2024\nB",
+        "source": "Umesh_resume_15_3___1_.pdf",
+        "type": "pdf",
+        "chunk_index": 0,
+        "total_chunks": 6
+      },
+      {
+        "id": "1012",
+        "text": "TechinComputerScienceandEngineering(Artificial Intelligence and Machine Learning)Chittoor,AndhraPradesh\nRelevant Coursework: Data Structures, Algorithms, Machine Learning\nSriChaitanyaJuniorCollege2018 - 2020\nMPC(Maths,Physics,Chemistry)(CGPA:7. 0/10. 00)(70%)Chittoor,AndhraPradesh\nR. K. ModelSchool2017 - 2018\nSSC(CGPA:8. 5/10. 00)Chittoor,AndhraPradesh\nTechnicalSkills\nFrontend: React. js, Redux, JavaScript, HTML, CSS, Tailwind CSS\nBackend: Node. js, Express",
+        "source": "Umesh_resume_15_3___1_.pdf",
+        "type": "pdf",
+        "chunk_index": 1,
+        "total_chunks": 6
+      },
+      {
+        "id": "1013",
+        "text": "js\nDatabases: Firebase, MongoDB\nTools: Git, Postman, REST APIs\nDeployment: Netlify, Vercel\nInternships\nFull-StackDeveloper|Innovate|Feb2024-April2024\n•\nContributed to REST API development using Node. js and React. js in Agile workflows. •\nCollaborated on a team project deployed on Netlify with 1k+ active users. Projects\n1. UdemyClone(React. js)|\n•\nBuilt a functional e-learning platform with Firebase authentication and Firestore for real-time data syncing",
+        "source": "Umesh_resume_15_3___1_.pdf",
+        "type": "pdf",
+        "chunk_index": 2,
+        "total_chunks": 6
+      },
+      {
+        "id": "1014",
+        "text": "•\nAchieved 95% Lighthouse performance score via code optimization. •\nTech:React. js, Tailwind CSS, Firebase\n2. ZenTaskTaskManagementApp|\n•\nDeveloped a full-featured to-do app with Redux for global state management and mobile-first UI. •\nEnhanced user retention by 25% through intuitive task categorization. •\nTech:React. js, Redux, Tailwind CSS\n3. BlinkitClone(MERNStack|\n•\nDeveloped a full-stack grocery delivery app with product listings, cart, authentication, and admin panel",
+        "source": "Umesh_resume_15_3___1_.pdf",
+        "type": "pdf",
+        "chunk_index": 3,
+        "total_chunks": 6
+      },
+      {
+        "id": "1015",
+        "text": "•\nIntegrated MongoDB for product data and built RESTful APIs using Express. js and Node. js. •\nImplemented Firebase Authentication and used Tailwind CSS for a responsive user interface. •\nTech:React. js, Node. js, Express. js, MongoDB, Firebase, Tailwind CSS\n4. WeatherApp|\n•\nGitHub:https://github. com/Umesh-Dayananda13/weather-app\n•\nDeveloped a weather application providing real-time updates using OpenWeather API. •\nImplemented responsive design and error handling for seamless UX. •\nTech:React",
+        "source": "Umesh_resume_15_3___1_.pdf",
+        "type": "pdf",
+        "chunk_index": 4,
+        "total_chunks": 6
+      },
+      {
+        "id": "1016",
+        "text": "js, API Integration, CSS",
+        "source": "Umesh_resume_15_3___1_.pdf",
+        "type": "pdf",
+        "chunk_index": 5,
+        "total_chunks": 6
+      }
+    ]
+  },
+  "idCounter": 1017
+}

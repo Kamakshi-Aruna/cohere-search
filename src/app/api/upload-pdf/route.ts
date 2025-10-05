@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {generateCohereEmbeddings} from "@/app/lib/cohereService";
-import {getVectorStore} from "@/app/lib/vectorStore";
+import documentStore from "@/app/lib/documentStore";
 
 export async function POST(request: NextRequest) {
     try {
@@ -52,67 +51,13 @@ export async function POST(request: NextRequest) {
         // Split text into chunks (roughly 500 characters each)
         const chunks = splitIntoChunks(textContent, 500);
 
-        // Generate embeddings and store in Qdrant
-        const { client, collectionName, embeddingDimension } = await getVectorStore();
-
-        // Ensure collection exists, create if it doesn't
-        try {
-            await client.getCollection(collectionName);
-        } catch (error) {
-            // Collection doesn't exist, create it
-            await client.createCollection(collectionName, {
-                vectors: {
-                    size: embeddingDimension || 1024, // Cohere embed-english-v3.0 dimension
-                    distance: "Cosine",
-                },
-            });
-        }
-
-        // Get current collection info to determine next ID
-        let startId = 1000 + Math.floor(Math.random() * 10000); // Random ID to avoid conflicts
-
-        // Generate embeddings for all chunks using Cohere
-        const embeddings = await generateCohereEmbeddings(chunks, "search_document");
-
-        if (embeddings.length === 0) {
-            throw new Error("Failed to generate embeddings with Cohere");
-        }
-
-        const points: any[] = [];
-
-        for (let i = 0; i < chunks.length && i < embeddings.length; i++) {
-            const chunk = chunks[i];
-            const embedding = embeddings[i];
-
-            if (embedding && embedding.length > 0) {
-                const point = {
-                    id: startId + i,
-                    vector: embedding,
-                    payload: {
-                        text: chunk,
-                        source: file.name,
-                        type: "pdf",
-                        chunk_index: i,
-                        total_chunks: chunks.length,
-                    }
-                };
-
-                points.push(point);
-            }
-        }
-
-        // Upload all points to Qdrant
-        if (points.length > 0) {
-            await client.upsert(collectionName, {
-                wait: true,
-                points: points,
-            });
-        }
+        // Store document chunks in memory
+        documentStore.addDocument(file.name, chunks);
 
         return NextResponse.json({
             success: true,
             message: `Successfully processed ${file.name}`,
-            chunks_created: points.length,
+            chunks_created: chunks.length,
             filename: file.name,
         });
 

@@ -264,6 +264,14 @@ ${context}
 
 Question: ${query}
 
+Instructions:
+- Analyze the context to see if it contains information that can answer the question
+- If asking for backend/full-stack developers, look for people with skills in: Java, Node.js, Python, databases, APIs, server-side technologies
+- If asking for frontend developers, look for people with skills in: React, HTML, CSS, JavaScript (client-side)
+- If asking for mobile developers, look for people with skills in: iOS, Android, React Native, Flutter, mobile app development
+- Extract and list the relevant developer names with their key skills
+- If no relevant developers are found, respond with "I couldn't find any relevant information for your query."
+
 Answer:`;
 
     try {

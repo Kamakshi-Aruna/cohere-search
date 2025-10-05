@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {getVectorStore} from "@/app/lib/vectorStore";
+import documentStore from "@/app/lib/documentStore";
 
 export async function DELETE(request: NextRequest) {
     try {
@@ -12,51 +12,10 @@ export async function DELETE(request: NextRequest) {
             );
         }
 
-        // Get vector store config
-        const { client, collectionName } = await getVectorStore();
+        // Check if file exists in document store
+        const documentChunks = documentStore.getDocument(filename);
 
-        // Check if collection exists
-        try {
-            await client.getCollection(collectionName);
-        } catch (error) {
-            return NextResponse.json({
-                success: false,
-                error: "No collection found",
-            });
-        }
-
-        // Search for all points with this filename
-        const scrollResult = await client.scroll(collectionName, {
-            filter: {
-                must: [
-                    {
-                        key: "source",
-                        match: {
-                            value: filename
-                        }
-                    }
-                ]
-            },
-            limit: 1000, // Max number of chunks per file
-            with_payload: false,
-            with_vector: false
-        });
-
-        if (scrollResult.points && scrollResult.points.length > 0) {
-            // Extract point IDs
-            const pointIds = scrollResult.points.map((point: any) => point.id);
-
-            // Delete all points for this file
-            await client.delete(collectionName, {
-                points: pointIds
-            });
-
-            return NextResponse.json({
-                success: true,
-                message: `Deleted ${pointIds.length} chunks for ${filename}`,
-                deletedCount: pointIds.length
-            });
-        } else {
+        if (!documentChunks) {
             return NextResponse.json({
                 success: false,
                 error: "File not found in database",
@@ -64,8 +23,25 @@ export async function DELETE(request: NextRequest) {
             });
         }
 
+        // Delete document from store
+        const deleted = documentStore.deleteDocument(filename);
+
+        if (deleted) {
+            return NextResponse.json({
+                success: true,
+                message: `Deleted ${documentChunks.length} chunks for ${filename}`,
+                deletedCount: documentChunks.length
+            });
+        } else {
+            return NextResponse.json({
+                success: false,
+                error: "Failed to delete file",
+                filename: filename
+            });
+        }
+
     } catch (error: any) {
-        console.error("❌ Delete error:", error);
+        console.error("Delete error:", error);
         return NextResponse.json(
             {
                 error: "Failed to delete PDF",
